@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
+import { trackEvent } from "../lib/analytics";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -326,7 +327,14 @@ function CaseStudyList({ onSelect }: { onSelect: (cs: CaseStudy) => void }) {
             isolation: "isolate",
             flexShrink: 0,
           }}
-          onClick={() => onSelect(cs)}
+          onClick={() => {
+            trackEvent("case_study_opened", {
+              case_study_title: cs.title,
+              company: cs.company,
+              ui_location: "highlighted_work_list",
+            });
+            onSelect(cs);
+          }}
           onMouseEnter={(e) => setCursor({ x: e.clientX, y: e.clientY, visible: true })}
           onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY, visible: true })}
           onMouseLeave={() => setCursor(c => ({ ...c, visible: false }))}
@@ -481,10 +489,15 @@ function CaseStudyOverlay({ cs, onClose, allCases, onNavigate }: {
             )}
             <button
               onClick={onClose}
-              className="w-9 h-9 flex items-center justify-center rounded-full transition-colors flex-shrink-0"
-              style={{ background: "hsl(var(--muted))", color: "hsl(var(--foreground))" }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--border))")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "hsl(var(--muted))")}
+              className="surface-chip w-9 h-9 flex items-center justify-center rounded-full transition-colors flex-shrink-0"
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--primary))";
+                (e.currentTarget as HTMLElement).style.color = "hsl(var(--primary))";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--surface-chip-border))";
+                (e.currentTarget as HTMLElement).style.color = "hsl(var(--surface-chip-fg))";
+              }}
             >
               <X size={16} />
             </button>
@@ -503,7 +516,11 @@ function CaseStudyOverlay({ cs, onClose, allCases, onNavigate }: {
                 {cs.tags.map(tag => (
                   <span
                     key={tag}
-                    className="surface-chip px-2.5 py-0.5 text-xs font-medium rounded-full"
+                    className="px-2.5 py-0.5 text-xs font-medium rounded-full"
+                    style={{
+                      background: "hsl(var(--muted))",
+                      color: "hsl(var(--foreground))",
+                    }}
                   >
                     {tag}
                   </span>
@@ -532,7 +549,14 @@ function CaseStudyOverlay({ cs, onClose, allCases, onNavigate }: {
               <div
                 className="relative w-full rounded-xl overflow-hidden cursor-pointer group"
                 style={{ aspectRatio: "16/9", background: "hsl(var(--muted))" }}
-                onClick={() => setDemoOpen(true)}
+                onClick={() => {
+                  trackEvent("case_study_demo_opened", {
+                    case_study_title: cs.title,
+                    company: cs.company,
+                    ui_location: "case_study_overlay",
+                  });
+                  setDemoOpen(true);
+                }}
               >
                 <img src={cs.heroMedia} alt="Interactive Demo" className="w-full h-full object-cover absolute inset-0" />
                 <div
@@ -677,7 +701,14 @@ export function HighlightedWork() {
       if (!company) return;
 
       const cs = caseStudies.find((item) => item.company?.toLowerCase() === company.toLowerCase());
-      if (cs) setOverlay(cs);
+      if (cs) {
+        trackEvent("case_study_opened", {
+          case_study_title: cs.title,
+          company: cs.company,
+          ui_location: "career_journey",
+        });
+        setOverlay(cs);
+      }
     };
 
     window.addEventListener("open-case-study", handler);

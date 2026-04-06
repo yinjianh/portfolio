@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, X, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createPortal } from "react-dom";
+import { trackEvent } from "../lib/analytics";
 
 const quickChips = ["Your tools?", "Why design?", "Freelance?"];
 
@@ -41,6 +42,10 @@ export function FloatingChat() {
 
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
+    trackEvent("chat_prompt_sent", {
+      prompt_text: text.trim().slice(0, 120),
+      ui_location: "floating_chat",
+    });
     setMessages((prev) => [...prev, { id: nextId.current++, role: "user", text: text.trim() }]);
     setInput("");
     setTyping(true);
@@ -79,7 +84,10 @@ export function FloatingChat() {
             <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: "hsl(var(--border))" }}>
               <span className="text-sm font-medium" style={{ color: "hsl(var(--foreground))" }}>Ask me anything</span>
               <button
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  trackEvent("chat_closed", { ui_location: "floating_chat" });
+                  setOpen(false);
+                }}
                 className="p-1 rounded-lg transition-colors"
                 style={{ color: "hsl(var(--muted-foreground))" }}
                 onMouseEnter={(e) => (e.currentTarget.style.background = "hsl(var(--muted))")}
@@ -172,7 +180,11 @@ export function FloatingChat() {
 
       {/* Trigger button */}
       <motion.button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          const nextOpen = !open;
+          trackEvent(nextOpen ? "chat_opened" : "chat_closed", { ui_location: "floating_chat" });
+          setOpen(nextOpen);
+        }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center"

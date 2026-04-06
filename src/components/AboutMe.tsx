@@ -138,6 +138,9 @@ export function AboutMe() {
             href="https://www.linkedin.com/in/yinjian-huang/"
             target="_blank"
             rel="noreferrer"
+            data-analytics-event="outbound_click"
+            data-analytics-label="linkedin_profile"
+            data-analytics-location="about_me"
             className="surface-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full transition-colors font-medium"
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = "hsl(var(--primary))"; e.currentTarget.style.color = "hsl(var(--primary))"; }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = "hsl(var(--surface-chip-border))"; e.currentTarget.style.color = "hsl(var(--surface-chip-fg))"; }}
@@ -149,6 +152,9 @@ export function AboutMe() {
             href="https://docs.google.com/document/d/1jzKZSUNEsCm017eb-0Xc3_WVfk-ixbhtEMhXYsuoVFI/edit?usp=sharing"
             target="_blank"
             rel="noreferrer"
+            data-analytics-event="outbound_click"
+            data-analytics-label="resume"
+            data-analytics-location="about_me"
             className="surface-chip inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full transition-colors font-medium"
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = "hsl(var(--primary))"; e.currentTarget.style.color = "hsl(var(--primary))"; }}
             onMouseLeave={(e) => { e.currentTarget.style.borderColor = "hsl(var(--surface-chip-border))"; e.currentTarget.style.color = "hsl(var(--surface-chip-fg))"; }}
@@ -258,6 +264,9 @@ export function Contact() {
             href={link.href}
             target="_blank"
             rel="noreferrer"
+            data-analytics-event="outbound_click"
+            data-analytics-label={link.label.toLowerCase()}
+            data-analytics-location="contact"
             className="flex items-center gap-2.5 px-2 py-2 rounded-xl text-sm transition-all group"
             style={{ color: "hsl(var(--muted-foreground))" }}
             onMouseEnter={(e) => {

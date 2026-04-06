@@ -3,6 +3,7 @@ import { adminThoughts } from "../data/admin-thoughts";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { trackEvent } from "../lib/analytics";
 
 const THOUGHT_PANEL_SUPPRESS_KEY = "__thoughtPanelSuppressOpenUntil";
 
@@ -716,9 +717,19 @@ export function Thoughts() {
   const selectThought = useCallback((thought: Thought) => {
     setActiveGroup(thought.group === "design" ? "design" : "building");
     if (thoughtOpensExternally(thought)) {
+      trackEvent("thought_opened_external", {
+        thought_title: thought.title,
+        ui_location: "thoughts_list",
+        link_url: thought.link?.url,
+      });
       window.open(thought.link?.url, "_blank", "noopener,noreferrer");
       return;
     }
+    trackEvent("thought_opened", {
+      thought_title: thought.title,
+      ui_location: "thoughts_list",
+      group: thought.group,
+    });
     setSelected(thought);
   }, []);
 
@@ -759,7 +770,13 @@ export function Thoughts() {
                 <button
                   key={tab.id}
                   type="button"
-                  onClick={() => setActiveGroup(tab.id)}
+                  onClick={() => {
+                    trackEvent("thought_group_selected", {
+                      group: tab.id,
+                      ui_location: "thoughts_tabs",
+                    });
+                    setActiveGroup(tab.id);
+                  }}
                   className="border-b px-0 pb-3 text-[0.82rem] font-medium transition-colors"
                   style={{
                     color: isActive ? "hsl(var(--foreground))" : "hsl(var(--muted-foreground))",

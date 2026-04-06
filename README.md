@@ -1,5 +1,16 @@
 # React + TypeScript + Vite
 
+## Analytics
+
+This site supports Google Analytics 4 click tracking.
+
+1. Create a GA4 web data stream.
+2. Add `VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX` to your local `.env`.
+3. In GitHub, add a repository variable named `VITE_GA_MEASUREMENT_ID` under `Settings -> Secrets and variables -> Actions -> Variables`.
+4. Rebuild and deploy.
+
+Tracked events include outbound profile/contact clicks, case study opens, thought opens, and floating chat interactions.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
