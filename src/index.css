@@ -1,0 +1,284 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  :root {
+    --background: 240 5% 96%;
+    --foreground: 240 6% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+    --primary: 211 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 240 5% 92%;
+    --muted-foreground: 240 4% 46%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 211 100% 50%;
+    --radius: 1.25rem;
+    --canvas: 240 5% 96%;
+    --bento-radius: 16px;
+    --bento-padding: 24px;
+    --bento-gap: 12px;
+    /* highlight chip defaults (light theme) */
+    --chip-bg: 211 100% 95%;
+    --chip-fg: 211 100% 35%;
+    --chip-border: 211 65% 86%;
+    --highlight-accent: 42 95% 64%;
+    --highlight-accent-alpha: 0.28;
+    --surface-chip-bg: 0 0% 100%;
+    --surface-chip-fg: 240 6% 16%;
+    --surface-chip-border: 240 10% 84%;
+    --card-shadow: 0 10px 28px rgba(20, 24, 32, 0.04);
+    --hover-surface: hsl(var(--foreground) / 0.04);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: hsl(var(--canvas));
+    color: hsl(var(--foreground));
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .bento-block {
+    background: hsl(var(--card));
+    border-radius: var(--bento-radius);
+    border: 1px solid hsl(var(--border));
+    overflow: hidden;
+    padding: var(--bento-padding);
+    box-shadow: var(--card-shadow);
+  }
+
+  .bento-label {
+    font-size: 10px;
+
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .highlight-chip {
+    color: inherit;
+    font-weight: 600;
+    padding: 0.04em 0.16em 0.08em;
+    border-radius: 0.25em;
+    background-image: linear-gradient(
+      180deg,
+      transparent 0,
+      hsl(var(--highlight-accent) / var(--highlight-accent-alpha)) 10%,
+      hsl(var(--highlight-accent) / var(--highlight-accent-alpha)) 92%,
+      transparent 92%
+    );
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .surface-chip {
+    background: hsl(var(--surface-chip-bg));
+    color: hsl(var(--surface-chip-fg));
+    border: 1px solid hsl(var(--surface-chip-border));
+    box-shadow: inset 0 1px 0 hsl(var(--foreground) / 0.04);
+  }
+
+  .article-thumb-muted {
+    filter: grayscale(1) saturate(0.2) contrast(0.92) brightness(1.02);
+    transition: filter 0.24s ease, transform 0.24s ease;
+  }
+
+  .group:hover .article-thumb-muted,
+  .group:focus-within .article-thumb-muted,
+  .group\/article:hover .article-thumb-muted,
+  .group\/article:focus-within .article-thumb-muted {
+    filter: none;
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  .hover-mute-item {
+    transition: opacity 0.18s ease, filter 0.18s ease, background 0.15s ease;
+  }
+
+  .hover-mute-list:hover .hover-mute-item,
+  .hover-mute-list:focus-within .hover-mute-item {
+    opacity: 0.34;
+    filter: saturate(0.7);
+  }
+
+  .hover-mute-list:hover .hover-mute-item:hover,
+  .hover-mute-list:focus-within .hover-mute-item:focus-within {
+    opacity: 1;
+    filter: none;
+  }
+
+  @media (hover: none) {
+    .hover-mute-list:hover .hover-mute-item,
+    .hover-mute-list:focus-within .hover-mute-item {
+      opacity: 1;
+      filter: none;
+    }
+  }
+}
+
+[data-panel-resize-handle-id] {
+  position: relative;
+  outline: none;
+}
+[data-panel-resize-handle-id]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 40px;
+  border-radius: 999px;
+  background: hsl(var(--border));
+  transition: background 0.15s, height 0.15s;
+}
+[data-panel-resize-handle-id][data-resize-handle-state="hover"]::after,
+[data-panel-resize-handle-id][data-resize-handle-state="drag"]::after {
+  background: hsl(var(--primary));
+  height: 60px;
+}
+
+/* ── Theme overrides ─────────────────────────────────────────── */
+
+/* Dark */
+[data-theme="dark"] {
+  --background: 240 6% 10%;
+  --foreground: 240 5% 90%;
+  --canvas: 240 10% 7%;
+  --card: 240 5% 14%;
+  --card-foreground: 240 5% 90%;
+  --primary: 211 100% 62%;
+  --primary-foreground: 240 6% 6%;
+  --muted: 240 5% 18%;
+  --muted-foreground: 240 4% 56%;
+  --border: 240 5% 24%;
+  --input: 240 5% 24%;
+  --ring: 211 100% 62%;
+  --chip-bg: 213 58% 24%;
+  --chip-fg: 213 100% 83%;
+  --chip-border: 213 46% 34%;
+  --highlight-accent: 42 92% 58%;
+  --highlight-accent-alpha: 0.42;
+  --surface-chip-bg: 240 7% 16%;
+  --surface-chip-fg: 240 8% 92%;
+  --surface-chip-border: 240 8% 29%;
+  --card-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+  --hover-surface: hsl(var(--foreground) / 0.08);
+}
+
+/* Warm */
+[data-theme="warm"] {
+  --background: 35 28% 95%;
+  --foreground: 20 30% 12%;
+  --canvas: 35 28% 95%;
+  --card: 35 30% 99%;
+  --card-foreground: 20 30% 12%;
+  --primary: 25 95% 50%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 35 18% 90%;
+  --muted-foreground: 30 12% 48%;
+  --border: 35 18% 87%;
+  --input: 35 18% 87%;
+  --ring: 25 95% 50%;
+  --chip-bg: 25 90% 92%;
+  --chip-fg: 25 95% 35%;
+  --chip-border: 25 75% 82%;
+  --highlight-accent: 42 95% 64%;
+  --highlight-accent-alpha: 0.3;
+  --card-shadow: 0 10px 28px rgba(70, 40, 12, 0.05);
+  --hover-surface: hsl(var(--foreground) / 0.04);
+}
+
+/* Midnight */
+[data-theme="midnight"] {
+  --background: 222 35% 8%;
+  --foreground: 218 30% 91%;
+  --canvas: 222 40% 5%;
+  --card: 222 30% 12%;
+  --card-foreground: 218 30% 91%;
+  --primary: 213 85% 62%;
+  --primary-foreground: 222 35% 6%;
+  --muted: 222 26% 16%;
+  --muted-foreground: 218 18% 55%;
+  --border: 222 24% 22%;
+  --input: 222 24% 22%;
+  --ring: 213 85% 62%;
+  --chip-bg: 213 58% 21%;
+  --chip-fg: 213 90% 82%;
+  --chip-border: 213 48% 33%;
+  --highlight-accent: 42 95% 64%;
+  --highlight-accent-alpha: 0.38;
+  --surface-chip-bg: 222 24% 17%;
+  --surface-chip-fg: 218 30% 92%;
+  --surface-chip-border: 218 18% 29%;
+  --card-shadow: 0 28px 56px rgba(0, 0, 0, 0.34);
+  --hover-surface: hsl(var(--foreground) / 0.08);
+}
+
+/* Rose */
+[data-theme="rose"] {
+  --background: 340 8% 96%;
+  --foreground: 340 8% 10%;
+  --canvas: 340 8% 96%;
+  --card: 0 0% 100%;
+  --card-foreground: 340 8% 10%;
+  --primary: 340 75% 53%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 340 8% 92%;
+  --muted-foreground: 340 5% 47%;
+  --border: 340 8% 88%;
+  --input: 340 8% 88%;
+  --ring: 340 75% 53%;
+  --chip-bg: 340 75% 93%;
+  --chip-fg: 340 75% 38%;
+  --chip-border: 340 60% 86%;
+  --highlight-accent: 42 95% 64%;
+  --highlight-accent-alpha: 0.3;
+  --card-shadow: 0 10px 28px rgba(48, 24, 32, 0.05);
+  --hover-surface: hsl(var(--foreground) / 0.04);
+}
+
+/* Forest */
+[data-theme="forest"] {
+  --background: 150 16% 9%;
+  --foreground: 150 14% 90%;
+  --canvas: 150 18% 6%;
+  --card: 150 14% 12%;
+  --card-foreground: 150 14% 90%;
+  --primary: 142 58% 46%;
+  --primary-foreground: 150 16% 6%;
+  --muted: 150 14% 17%;
+  --muted-foreground: 150 10% 56%;
+  --border: 150 14% 21%;
+  --input: 150 14% 21%;
+  --ring: 142 58% 46%;
+  --chip-bg: 142 40% 16%;
+  --chip-fg: 142 58% 58%;
+  --chip-border: 142 34% 28%;
+  --highlight-accent: 46 90% 62%;
+  --highlight-accent-alpha: 0.4;
+  --surface-chip-bg: 150 13% 18%;
+  --surface-chip-fg: 150 14% 92%;
+  --surface-chip-border: 150 12% 28%;
+  --card-shadow: 0 28px 56px rgba(0, 0, 0, 0.3);
+  --hover-surface: hsl(var(--foreground) / 0.08);
+}

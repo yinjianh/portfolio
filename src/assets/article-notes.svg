@@ -1,0 +1,12 @@
+<svg width="600" height="360" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect width="600" height="360" fill="#F0EFED"/>
+
+  <!-- Claude logo -->
+  <image href="/claude-logo.png" x="143" y="148" width="64" height="64"/>
+
+  <!-- Vertical divider -->
+  <line x1="300" y1="140" x2="300" y2="220" stroke="#D5D3CF" stroke-width="1"/>
+
+  <!-- Obsidian logo -->
+  <image href="https://www.google.com/s2/favicons?sz=128&domain=obsidian.md" x="393" y="148" width="64" height="64"/>
+</svg>
