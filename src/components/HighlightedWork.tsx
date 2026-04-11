@@ -340,7 +340,7 @@ function CaseStudyList({ onSelect }: { onSelect: (cs: CaseStudy) => void }) {
           onMouseLeave={() => setCursor(c => ({ ...c, visible: false }))}
         >
           <div
-            className="overflow-hidden flex-shrink-0 md:w-[60%] md:min-h-[280px]"
+            className="overflow-hidden flex-shrink-0 md:w-[60%] md:max-w-[680px] md:min-h-[280px]"
             style={{
               aspectRatio: "16/9",
               background: getHeroBackground(cs, isDark),
@@ -369,7 +369,7 @@ function CaseStudyList({ onSelect }: { onSelect: (cs: CaseStudy) => void }) {
             )}
           </div>
 
-          <div className="flex flex-col p-4 md:w-[40%] md:p-5 transition-colors duration-200 group-hover:bg-[var(--hover-surface)]">
+          <div className="flex min-w-0 flex-1 flex-col p-4 md:p-5 transition-colors duration-200 group-hover:bg-[var(--hover-surface)]">
             <h3
               className="font-bold font-display leading-snug mb-1"
               style={{ fontSize: "1rem", color: "hsl(var(--foreground))" }}

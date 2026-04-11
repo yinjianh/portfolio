@@ -11,8 +11,9 @@ const GAP = 12;
 const showTestimonials = true;
 const DESKTOP_MEDIA_QUERY = "(min-width: 768px)";
 
-// Column min-widths — based on 20/20/40/20 at ~1200px viewport
+// Desktop base widths. About stays fixed; work, thoughts, and testimonials can grow on wide screens.
 const COL = { about: 400, work: 860, thoughts: 400, testimonials: 520 };
+const WIDE_SCREEN_GROW = { work: 8, thoughts: 10, testimonials: 13 };
 
 type Tab = "home" | "work" | "thoughts" | "testimonials";
 
@@ -199,15 +200,29 @@ function DesktopLayout() {
         </div>
 
         {/* Col 2: Highlighted Work */}
-        <div ref={colWorkRef} className="h-full flex-shrink-0" style={{ width: COL.work }}>
+        <div
+          ref={colWorkRef}
+          className="h-full"
+          style={{
+            flexGrow: WIDE_SCREEN_GROW.work,
+            flexShrink: 0,
+            flexBasis: COL.work,
+            minWidth: COL.work,
+          }}
+        >
           <HighlightedWork />
         </div>
 
         {/* Col 3: Thoughts */}
         <div
           ref={colThoughtsRef}
-          className="h-full flex-shrink-0"
-          style={{ width: COL.thoughts, minWidth: COL.thoughts }}
+          className="h-full"
+          style={{
+            flexGrow: WIDE_SCREEN_GROW.thoughts,
+            flexShrink: 0,
+            flexBasis: COL.thoughts,
+            minWidth: COL.thoughts,
+          }}
         >
           <Thoughts />
         </div>
@@ -216,8 +231,13 @@ function DesktopLayout() {
         {showTestimonials && (
           <div
             ref={colTestimonialsRef}
-            className="h-full flex-shrink-0"
-            style={{ width: COL.testimonials, minWidth: COL.testimonials }}
+            className="h-full"
+            style={{
+              flexGrow: WIDE_SCREEN_GROW.testimonials,
+              flexShrink: 0,
+              flexBasis: COL.testimonials,
+              minWidth: COL.testimonials,
+            }}
           >
             <Testimonials />
           </div>
