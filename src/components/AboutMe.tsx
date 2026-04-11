@@ -116,7 +116,7 @@ export function AboutMe() {
               <span style={{ color: "hsl(var(--foreground))" }}>Yinjian Huang</span>
             </h1>
             <p className="text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Designer &amp; builder.
+              Designer &amp; Builder.
             </p>
           </div>
         </div>
