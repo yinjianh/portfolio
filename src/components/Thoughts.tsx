@@ -6,6 +6,32 @@ import { X } from "lucide-react";
 import { trackEvent } from "../lib/analytics";
 
 const THOUGHT_PANEL_SUPPRESS_KEY = "__thoughtPanelSuppressOpenUntil";
+const THOUGHT_PANEL_MIN_WIDTH = 380;
+const THOUGHT_PANEL_MAX_WIDTH = 1080;
+
+function getDefaultThoughtPanelWidth(viewportWidth: number) {
+  if (viewportWidth < 768) return viewportWidth;
+  if (viewportWidth >= 1800) {
+    return Math.min(1040, Math.max(820, Math.round(viewportWidth * 0.5)));
+  }
+  if (viewportWidth >= 1600) {
+    return Math.min(920, Math.max(720, Math.round(viewportWidth * 0.46)));
+  }
+  if (viewportWidth >= 1440) {
+    return Math.min(920, Math.max(740, Math.round(viewportWidth * 0.48)));
+  }
+  if (viewportWidth >= 1280) {
+    return Math.min(820, Math.max(700, Math.round(viewportWidth * 0.46)));
+  }
+  return Math.min(720, Math.max(560, Math.round(viewportWidth * 0.4)));
+}
+
+function getThoughtContentMaxWidth(panelWidth: number) {
+  if (panelWidth >= 980) return 780;
+  if (panelWidth >= 860) return 680;
+  if (panelWidth >= 720) return 620;
+  return 544;
+}
 
 // Returns 'screen' for dark thumbnail backgrounds, 'multiply' for light ones
 function logoBlendForBg(hex?: string): "screen" | "multiply" {
@@ -375,16 +401,14 @@ function ThoughtPanel({
   onClose: () => void;
   onSelect: (t: Thought) => void;
 }) {
-  const [panelWidth, setPanelWidth] = useState(() =>
-    window.innerWidth < 768
-      ? window.innerWidth
-      : Math.min(720, Math.max(560, Math.round(window.innerWidth * 0.4)))
-  );
+  const [panelWidth, setPanelWidth] = useState(() => getDefaultThoughtPanelWidth(window.innerWidth));
   const [demoUrl, setDemoUrl] = useState<string | null>(null);
   const isDragging = useRef(false);
+  const hasManualResize = useRef(false);
   const startX = useRef(0);
   const startWidth = useRef(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const contentMaxWidth = getThoughtContentMaxWidth(panelWidth);
 
   useEffect(() => {
     if (thought) contentRef.current?.scrollTo({ top: 0 });
@@ -393,6 +417,7 @@ function ThoughtPanel({
 
   const onDragStart = useCallback((e: React.MouseEvent) => {
     isDragging.current = true;
+    hasManualResize.current = true;
     startX.current = e.clientX;
     startWidth.current = panelWidth;
     document.body.style.cursor = "ew-resize";
@@ -400,10 +425,23 @@ function ThoughtPanel({
   }, [panelWidth]);
 
   useEffect(() => {
+    const onResize = () => {
+      setPanelWidth((currentWidth) => {
+        if (window.innerWidth < 768) return window.innerWidth;
+        if (!hasManualResize.current) return getDefaultThoughtPanelWidth(window.innerWidth);
+        return Math.min(THOUGHT_PANEL_MAX_WIDTH, Math.max(THOUGHT_PANEL_MIN_WIDTH, currentWidth));
+      });
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
     const onMove = (e: MouseEvent) => {
       if (!isDragging.current) return;
       const delta = startX.current - e.clientX;
-      const next = Math.min(860, Math.max(380, startWidth.current + delta));
+      const next = Math.min(THOUGHT_PANEL_MAX_WIDTH, Math.max(THOUGHT_PANEL_MIN_WIDTH, startWidth.current + delta));
       setPanelWidth(next);
     };
     const onUp = () => {
@@ -541,7 +579,7 @@ function ThoughtPanel({
                 </div>
               </div>
             ) : (
-              <div style={{ maxWidth: 544, width: "100%", margin: "0 auto" }}>
+              <div style={{ maxWidth: contentMaxWidth, width: "100%", margin: "0 auto" }}>
                 {/* Date */}
                 <span className="text-xs mb-3 block" style={{ color: "hsl(var(--muted-foreground))" }}>
                   {thought.date}
@@ -557,7 +595,7 @@ function ThoughtPanel({
             )}
 
             {/* Constrained reading width — source link + body */}
-            <div style={{ maxWidth: 544, width: "100%", margin: "0 auto" }}>
+            <div style={{ maxWidth: contentMaxWidth, width: "100%", margin: "0 auto" }}>
             {/* Source link */}
             {thought.link && (
               <a
