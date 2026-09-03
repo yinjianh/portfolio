@@ -30,6 +30,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # Create the Pages site if it does not exist. Toggling the repository
+          # to private disables Pages entirely, and turning it public again does
+          # not restore it, which fails this step with "Get Pages site failed".
+          enablement: true
 
       - name: Install dependencies
         run: npm ci
